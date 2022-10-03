@@ -67,5 +67,5 @@ end
 
 f_store = f_store(:,1:s:end);
 
-save('DNS_Burgers_s_20.mat','U_DNS','-v7.3')
-save('DNS_Force_LES_s_20.mat','f_store','-v7.3')
+save('DNS_Burgers_s_20.mat','U_DNS')
+save('DNS_Force_LES_s_20.mat','f_store')
