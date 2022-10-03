@@ -1,7 +1,3 @@
-clc
-clear all
-close all
-
 L=100.0;
 nu=0.02;
 A=sqrt(2)*1e-2;
@@ -9,11 +5,9 @@ A=sqrt(2)*1e-2;
 N=1024;
 dt=0.01;
 s=20; %ratio of LES and DNS time steps
-
-% number of time steps
+      % number of time steps
 M=10000000;
-
-% time steps between samples
+      % time steps between samples
 P=1;
 
 x=[0:N-1]'*L/N;
@@ -35,40 +29,40 @@ un=zeros(N,1);
 
 f=zeros(N,1);
 for kk=1:3
-    C1=randn;
-    C2=randn;
-    f=f+C1*A/sqrt(kk*s*dt)*cos(2*pi*kk*x/L+2*pi*C2);
+  C1=randn;
+  C2=randn;
+  f=f+C1*A/sqrt(kk*s*dt)*cos(2*pi*kk*x/L+2*pi*C2);
 end
 fn=fft(f);
 
 for m=2:M
-    Fn=1i*kx.*fft(0.5*u.^2);
+  Fn=1i*kx.*fft(0.5*u.^2);
 
-    if(mod(m,s)==0)  
-        f= zeros(size(f));
+  if(mod(m,s)==0)
+    f= zeros(size(f));
 
-        for kk=1:3
-            C1=randn;
-            C2=randn;
-            f=f+C1*A/sqrt(kk*s*dt)*cos(2*pi*kk*x/L+2*pi*C2);
-        end
-        fn=fft(f);
+    for kk=1:3
+      C1=randn;
+      C2=randn;
+      f=f+C1*A/sqrt(kk*s*dt)*cos(2*pi*kk*x/L+2*pi*C2);
     end
-    
-    for k=1:N
-        C=0.5*(kx(k))^2*nu*dt;
-        un(k)=((1.0-C)*un_old(k)-0.5*dt*(3.0*Fn(k)-Fn_old(k))+dt*fn(k))/(1.0+C);
-    end
-    
-    un_old=un;
-    u=real(ifft(un));
-    Fn_old=Fn;
-    
-    if(mod(m,P)==0)
-        z=z+1;
-        U_DNS(:,z) = u;
-        f_store(:,z+1) = f;
-    end
+    fn=fft(f);
+  end
+
+  for k=1:N
+    C=0.5*(kx(k))^2*nu*dt;
+    un(k)=((1.0-C)*un_old(k)-0.5*dt*(3.0*Fn(k)-Fn_old(k))+dt*fn(k))/(1.0+C);
+  end
+
+  un_old=un;
+  u=real(ifft(un));
+  Fn_old=Fn;
+
+  if(mod(m,P)==0)
+    z=z+1;
+    U_DNS(:,z) = u;
+    f_store(:,z+1) = f;
+  end
 end
 
 f_store = f_store(:,1:s:end);
